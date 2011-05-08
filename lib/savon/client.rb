@@ -4,6 +4,7 @@ require "savon/soap/request"
 require "savon/soap/response"
 require "savon/wsdl/document"
 require "savon/wsse"
+require "savon/wsa"
 require "savon/delegator"
 
 module Savon
@@ -55,6 +56,11 @@ module Savon
       @wsse ||= WSSE.new
     end
 
+    # Returns the <tt>Savon::WSA</tt> object.
+    def wsa
+      @wsa ||= WSA.new
+    end
+
     # Returns the <tt>Savon::SOAP::XML</tt>. Notice, that this object is only available
     # in a block passed to <tt>Savon::Client#request</tt>. A new instance of this object
     # is created per SOAP request.
@@ -85,6 +91,7 @@ module Savon
         preconfigure extract_options(args)
         process &block if block
         soap.wsse = wsse
+        soap.wsa = wsa
 
         response = SOAP::Request.execute(http, soap)
         set_cookie response.http.headers
